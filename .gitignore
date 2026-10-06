@@ -8,3 +8,5 @@ data/
 *.log
 .DS_Store
 n8n-inspect.json
+
+backup/
