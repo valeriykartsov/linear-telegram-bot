@@ -28,14 +28,16 @@ Linear API
     │
     ▼
 Linear
-Технологии
+
+## Технологии
 Telegram Bot API — получение сообщений от Telegram и взаимодействие с ботом
 n8n — автоматизация и выполнение workflow
 Docker / Docker Compose — запуск локального n8n
 ngrok — публичный HTTPS endpoint для Telegram webhook
 Linear API — интеграция с Linear
 Git / GitHub — версионирование проекта
-Структура проекта
+
+## Структура проекта
 linear-telegram-bot/
 ├── workflows/
 │   └── linear-telegram-v1.json
@@ -47,7 +49,7 @@ linear-telegram-bot/
 
 Runtime-данные n8n хранятся в Docker volume и не находятся в Git.
 
-Запуск
+## Запуск
 1. Подготовить переменные окружения
 
 Создать .env на основе .env.example:
@@ -72,8 +74,8 @@ docker compose up -d
 docker compose ps
 
 После запуска локальный интерфейс n8n доступен по адресу:
-
 http://localhost:5678
+
 3. Workflow
 
 Основной workflow:
