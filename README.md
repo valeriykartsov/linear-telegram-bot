@@ -13,21 +13,7 @@ Telegram-бот получает сообщения через Telegram Bot API.
 ## Архитектура
 
 text
-Telegram
-    │
-    │ Webhook
-    ▼
-ngrok HTTPS
-    │
-    ▼
-n8n (Docker)
-    │
-    │ linear-telegram-v1
-    ▼
-Linear API
-    │
-    ▼
-Linear
+Telegram - {Webhook} - > ngrok HTTPS - - > n8n (Docker) - {linear-telegram-v1} - > Linear API – - > Linear
 
 ## Технологии
 Telegram Bot API — получение сообщений от Telegram и взаимодействие с ботом
