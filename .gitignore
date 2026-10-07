@@ -10,3 +10,6 @@ data/
 n8n-inspect.json
 
 backup/
+
+__pycache__/
+.venv/

@@ -1,0 +1,65 @@
+{
+  "name": "linear-telegram-error",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "da8391fa-636a-48a7-b4d6-b4a543e3e587",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "=522652682",
+        "text": "=⚠️ Произошла ошибка при выполнении команды. \nПопробуй ещё раз через несколько секунд.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d6b5f402-326e-4f77-91ce-25cd635de0aa",
+      "name": "Send a text message",
+      "webhookId": "1358e1cc-21db-47bd-8737-2369e770ff0a",
+      "credentials": {
+        "telegramApi": {
+          "id": "xJM2C1P8CBPWyNs3",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "40cfef00-84a8-42d4-91de-4b4b14aac889",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b7f8187f0ef1cf49c909a13f9575a015d5636d33e565583ab72311f52104db8a"
+  },
+  "nodeGroups": [],
+  "id": "tbOLJG8XBmGWDtxO",
+  "tags": []
+}

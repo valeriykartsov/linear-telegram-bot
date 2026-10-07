@@ -12,7 +12,7 @@
       "typeVersion": 1.5,
       "position": [
         -128,
-        0
+        48
       ],
       "id": "83462ae6-f06b-4517-a2f5-0edc2484baa2",
       "name": "Telegram Trigger",
@@ -31,7 +31,7 @@
             {
               "conditions": {
                 "options": {
-                  "caseSensitive": true,
+                  "caseSensitive": false,
                   "leftValue": "",
                   "typeValidation": "strict",
                   "version": 3
@@ -53,7 +53,7 @@
             {
               "conditions": {
                 "options": {
-                  "caseSensitive": true,
+                  "caseSensitive": false,
                   "leftValue": "",
                   "typeValidation": "strict",
                   "version": 3
@@ -71,11 +71,60 @@
                 ],
                 "combinator": "and"
               }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b1dc1e8a-b0f5-4fc2-8589-40d4339f4a8a",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "bb05ef7d-7c9d-4568-8807-0ff0267ac87b",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/today",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
             }
           ]
         },
         "looseTypeValidation": "={{ false }}",
-        "options": {}
+        "options": {
+          "fallbackOutput": "extra",
+          "ignoreCase": true
+        }
       },
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
@@ -95,7 +144,7 @@
       "typeVersion": 1.1,
       "position": [
         448,
-        -16
+        -160
       ],
       "id": "f41a16a4-a963-4607-b4d3-3b8f15ec8497",
       "name": "Get many issues",
@@ -114,7 +163,7 @@
       "typeVersion": 2,
       "position": [
         672,
-        -16
+        -160
       ],
       "id": "b0c9cb96-f680-4cb8-a18a-15750dea69ab",
       "name": "Code in JavaScript"
@@ -129,7 +178,7 @@
       "typeVersion": 1.2,
       "position": [
         896,
-        -16
+        -160
       ],
       "id": "30960fe4-6c69-42d5-8540-fcc9a52795c3",
       "name": "Send a text message",
@@ -151,7 +200,7 @@
       "typeVersion": 1.1,
       "position": [
         448,
-        208
+        16
       ],
       "id": "75aaae0b-2aea-4386-8584-919557558337",
       "name": "Create an issue",
@@ -172,11 +221,110 @@
       "typeVersion": 1.2,
       "position": [
         672,
-        208
+        16
       ],
       "id": "acf892dc-51f0-493d-83d4-911c26877e8b",
       "name": "Send a text message1",
       "webhookId": "4699e5e6-2f28-4674-b4e2-ca63a434bb63",
+      "credentials": {
+        "telegramApi": {
+          "id": "nn4QtXQ32WUOypCe",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "=🤖 Доступные команды:  \n\n/new <текст> — создать задачу в Linear \n/tasks — показать список задач \n/today — задачи на сегодня \n/help — показать эту справку",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        192
+      ],
+      "id": "2b24b833-9a49-4137-896b-4601df0a6285",
+      "name": "Send a text message2",
+      "webhookId": "4d20c9d6-0a10-4fe4-b456-4445e1a51083",
+      "credentials": {
+        "telegramApi": {
+          "id": "nn4QtXQ32WUOypCe",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.linear",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        368
+      ],
+      "id": "b28ed847-977c-41ea-b264-da049989a67f",
+      "name": "Get many issues1",
+      "credentials": {
+        "linearApi": {
+          "id": "18EXq6DV6VIyZu8m",
+          "name": "Linear account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = $now\n  .setZone('Europe/Amsterdam')\n  .toFormat('yyyy-MM-dd');\n\nconst issues = $input.all().filter(item => {\n  return item.json.dueDate === today;\n});\n\nif (issues.length === 0) {\n  return [{\n    json: {\n      text: `📅 На сегодня задач нет.\\n\\nДата: ${today}`\n    }\n  }];\n}\n\nconst text = issues\n  .map(item => `${item.json.identifier} — ${item.json.title}`)\n  .join('\\n');\n\nreturn [{\n  json: {\n    text: `📅 Задачи на сегодня (${today}):\\n\\n${text}`\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        368
+      ],
+      "id": "05ac1bd9-bc02-47bc-8daf-9c50d045f81f",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        368
+      ],
+      "id": "e5a0316d-2bbf-4a8e-afa5-8982febe8288",
+      "name": "Send a text message3",
+      "webhookId": "704ee2df-355f-4fb2-9a97-7f6815d3076b",
+      "credentials": {
+        "telegramApi": {
+          "id": "nn4QtXQ32WUOypCe",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "=❓ Неизвестная команда.  \n\nДоступные команды: \n/new — создать задачу \n/tasks — список задач \n/today — задачи на сегодня \n/help — помощь",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        528
+      ],
+      "id": "d5a1fef2-34a1-4556-8f64-7e338b3491c7",
+      "name": "Send a text message4",
+      "webhookId": "87b7e501-21f9-44b9-98c7-5361a7a7b021",
       "credentials": {
         "telegramApi": {
           "id": "nn4QtXQ32WUOypCe",
@@ -210,6 +358,27 @@
         [
           {
             "node": "Create an issue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many issues1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message4",
             "type": "main",
             "index": 0
           }
@@ -253,14 +422,40 @@
       "main": [
         []
       ]
+    },
+    "Get many issues1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "tbOLJG8XBmGWDtxO",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
-  "versionId": "abf3b833-bdb6-4401-b898-e07ff3d5e534",
+  "versionId": "347ae200-ba27-4f09-9309-50a46be074ff",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b7f8187f0ef1cf49c909a13f9575a015d5636d33e565583ab72311f52104db8a"

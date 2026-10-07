@@ -1,18 +1,15 @@
-# Linear Telegram Bot
+# Linear Telegram Bot v2
 
-Интеграционный проект, который связывает Telegram-бота, n8n и Linear.
-
-## Что делает проект
-
-Telegram-бот получает сообщения через Telegram Bot API. Webhook от Telegram приходит в локальный экземпляр n8n через публичный HTTPS endpoint ngrok.
-
-В n8n workflow `linear-telegram-v1` обрабатывает входящие сообщения и взаимодействует с Linear API.
-
-Проект предназначен для изучения и практической отработки интеграций, автоматизации и работы с API.
+## Что делает
+Telegram-бот для работы с задачами Linear:
+- /start
+- /new
+- /tasks
+- /today
+- /help
 
 ## Архитектура
 
-text
 Telegram - {Webhook} - > ngrok HTTPS - - > n8n (Docker) - {linear-telegram-v1} - > Linear API – - > Linear
 
 ## Технологии
@@ -23,39 +20,23 @@ ngrok — публичный HTTPS endpoint для Telegram webhook
 Linear API — интеграция с Linear
 Git / GitHub — версионирование проекта
 
-## Структура проекта
-linear-telegram-bot/
-├── workflows/
-│   └── linear-telegram-v1.json
-├── docs/
-├── .env.example
-├── .gitignore
-├── docker-compose.yml
-└── README.md
-
-Runtime-данные n8n хранятся в Docker volume и не находятся в Git.
+## Стек
+- Python — если используется
+- n8n
+- Docker / Docker Compose
+- Telegram Bot API
+- Linear API
+- ngrok
 
 ## Запуск
-1. Подготовить переменные окружения
 
-Создать .env на основе .env.example:
+1. Создать .env на основе .env.example
+2. Заполнить секреты
+3. Запустить:
 
-cp .env.example .env
-
-Заполнить необходимые значения:
-
-N8N_HOST
-N8N_PROTOCOL
-WEBHOOK_URL
-TELEGRAM_BOT_TOKEN
-LINEAR_API_KEY
-
-Файл .env не добавляется в Git.
-
-2. Запустить n8n
 docker compose up -d
 
-Проверить состояние:
+4. Проверить:
 
 docker compose ps
 
@@ -63,50 +44,30 @@ docker compose ps
 http://localhost:5678
 
 3. Workflow
+## Остановка
 
-Основной workflow:
+docker compose down
 
-workflows/linear-telegram-v1.json
+## Команды
 
-Workflow можно импортировать в n8n через интерфейс.
+| Команда | Назначение |
+|---|---|
+| /start | Запустить бота |
+| /stop | Остановить |
+| /new | Создать задачу |
+| /tasks | Список задач |
+| /today | Задачи на сегодня |
+| /help | Помощь |
 
-Credentials для Telegram и Linear должны быть настроены непосредственно в n8n.
+## Error handling
 
-ngrok
+Ошибки workflow обрабатываются отдельным Error Workflow.
 
-Telegram должен иметь доступ к публичному HTTPS webhook endpoint.
+## Структура
 
-В текущей локальной конфигурации ngrok проксирует запросы к n8n:
-
-Telegram → ngrok → localhost:5678
-
-Публичный URL должен быть указан в WEBHOOK_URL.
-
-Безопасность
-
-Секреты и runtime-данные не хранятся в Git:
-
-.env
-Telegram Bot Token
-Linear API Key
-n8n database
-n8n logs
-Docker volume
-локальные backup-файлы
-
-Для настройки окружения используется .env.example.
-
-Текущий статус
-
-MVP-инфраструктура настроена:
-
- Git repository
- Docker / Docker Compose
- локальный n8n
- persistent Docker volume
- Telegram integration
- Linear integration
- ngrok webhook endpoint
- linear-telegram-v1 workflow
- расширение набора Telegram-команд
- дальнейшая автоматизация работы с Linear
+.
+- docker-compose.yml
+- .env.example
+- .gitignore
+- README.md
+- workflows/

@@ -1,6 +1,7 @@
 services:
   n8n:
     image: n8nio/n8n:latest
+    restart: unless-stopped
     ports:
       - "5678:5678"
     environment:
@@ -10,6 +11,18 @@ services:
       - WEBHOOK_URL=${WEBHOOK_URL}
     volumes:
       - n8n_data:/home/node/.n8n
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      - "http"
+      - "n8n:5678"
+      - "--url=${NGROK_URL}"
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    depends_on:
+      - n8n
 
 volumes:
   n8n_data:
