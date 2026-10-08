@@ -38,6 +38,29 @@
                 },
                 "conditions": [
                   {
+                    "id": "bfd502e8-4f6f-4697-99e3-fe487ba489e4",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
                     "leftValue": "={{ $json.message.text }}",
                     "rightValue": "/tasks",
                     "operator": {
@@ -331,6 +354,28 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "🚀 Bot already started! ",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        -320
+      ],
+      "id": "664945af-d9c9-46d4-9e07-3461a117e020",
+      "name": "Send a text message5",
+      "webhookId": "d4b05a76-0d37-406f-9854-3fe769350b1d",
+      "credentials": {
+        "telegramApi": {
+          "id": "xJM2C1P8CBPWyNs3",
+          "name": "Telegram account 2"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -348,6 +393,13 @@
     },
     "Switch": {
       "main": [
+        [
+          {
+            "node": "Send a text message5",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Get many issues",
@@ -455,7 +507,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "347ae200-ba27-4f09-9309-50a46be074ff",
+  "versionId": "31af8041-1ea9-4b8e-afe0-47af238f7237",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b7f8187f0ef1cf49c909a13f9575a015d5636d33e565583ab72311f52104db8a"
